@@ -1,0 +1,10 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'">
+<title>IP智能体 · 工作环境</title><link rel="stylesheet" href="setup.css"></head><body>
+<main><header><div class="logo">IP</div><div><h1>IP智能体</h1><p>把想法，变成你的下一条视频。</p></div><span id="version"></span></header>
+<section class="intro"><span>YOUR CREATIVE SPACE</span><h2>选择你的创作空间</h2><p>数字人视频、声音克隆、视频复刻，在一个工作室里完成。</p></section>
+<div class="choices"><button class="choice active" id="builtin"><strong>本机工作室</strong><span>独立保存素材与作品，连接你选择的模型服务。</span><small>新用户从这里开始</small></button><button class="choice" id="connect"><strong>连接已有工作室</strong><span>继续使用已有的模型、声音和作品，无需搬家。</span><small>适合已部署服务的用户</small></button></div>
+<section id="local-panel" class="panel"><h3>准备媒体工具 <span id="media-state">检查中</span></h3><p>处理视频、音频和导出片段需要 FFmpeg。首次安装约下载 60 MB。</p><div class="row"><button id="install">下载并安装媒体工具</button><button id="choose" class="secondary">选择已有工具目录</button></div><p class="fine">工具由 FFmpeg 社区提供，按其 GPL 许可使用，从上游下载并校验。模型权重需单独安装；云端生成需要自己的 API Key，费用由服务商收取。</p></section>
+<section id="remote-panel" class="panel" hidden><label for="url">工作室地址</label><input id="url" type="url" value="http://127.0.0.1:7865" spellcheck="false"><p>本机服务可用 HTTP，其他电脑请使用 HTTPS。仅连接你信任的工作室。</p><p class="fine">作品和模型保存在所连接的服务中。服务所在电脑需保持运行。</p></section>
+<div id="status" role="status" aria-live="polite"></div><button id="launch" class="primary">进入工作室 <span>→</span></button>
+<footer><span>素材本地保存 · Windows / macOS</span><button id="data">打开数据文件夹</button></footer></main><script src="setup.js"></script></body></html>

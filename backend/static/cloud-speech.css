@@ -1,0 +1,6 @@
+.cloud-service-card{border:1px solid var(--border,#e0e7ef);border-radius:16px;padding:20px;margin-top:16px;background:#fff}
+.cloud-service-heading{display:flex;align-items:center;justify-content:space-between;gap:16px}.cloud-service-heading strong{font-size:17px}.cloud-service-heading span{color:#607888;font-size:12px}
+.cloud-service-card p{font-size:12px;line-height:1.8;color:#778b9d}.cloud-service-card label{display:block;margin:12px 0}.cloud-service-card input,.cloud-service-card select{width:100%;margin-top:6px}
+.cloud-service-actions,.voice-heading-actions{display:flex;gap:10px;flex-wrap:wrap}.cloud-service-card .error-text{color:#bc4033;min-height:1em;margin-bottom:0}
+#cloud-settings-dialog{max-width:600px}#cloud-confirm-dialog{max-width:470px}#cloud-confirm-copy{line-height:1.9;white-space:pre-line}
+.cloud-settings-link{padding:0;background:none;border:0;color:#048eae;font:inherit;font-size:12px;cursor:pointer;margin:2px 0 12px}

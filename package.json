@@ -1,0 +1,30 @@
+{
+  "name": "ip-agent",
+  "version": "0.1.0",
+  "description": "IP智能体：数字人、声音克隆与视频创作工作室",
+  "author": "Leon-Drq",
+  "license": "MIT",
+  "homepage": "https://github.com/Leon-Drq/ip-agent",
+  "repository": {"type": "git", "url": "https://github.com/Leon-Drq/ip-agent.git"},
+  "main": "desktop/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test tests/desktop.test.cjs",
+    "pack": "electron-builder --dir --publish never",
+    "dist": "electron-builder --publish never"
+  },
+  "devDependencies": {"electron": "45.1.0", "electron-builder": "26.18.0"},
+  "build": {
+    "appId": "ai.ipagent.desktop",
+    "productName": "IP智能体",
+    "artifactName": "IP-Agent-${version}-${os}-${arch}.${ext}",
+    "directories": {"output": "release"},
+    "files": ["desktop/**", "package.json", "LICENSE", "THIRD_PARTY_NOTICES.md"],
+    "extraResources": [{"from": "dist/backend/ip-agent-service", "to": "backend"}],
+    "asar": true,
+    "win": {"target": ["nsis"], "icon": "assets/icon.png"},
+    "nsis": {"oneClick": false, "allowToChangeInstallationDirectory": true, "perMachine": false, "deleteAppDataOnUninstall": false, "createDesktopShortcut": true},
+    "mac": {"target": ["dmg", "zip"], "category": "public.app-category.video", "icon": "assets/icon.png", "identity": "-"},
+    "dmg": {"title": "IP智能体 ${version}"}
+  }
+}

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light"><title>IP智能体 · 数字人与声音</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='10' fill='%2305b5de'/%3E%3Cpath d='M11 8v16l12-8z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/studio.css?v=unified-projects-20261029">
+  <link rel="stylesheet" href="/static/extraction.css?v=clip-20261027">
+  <link rel="stylesheet" href="/static/remix.css?v=roles-20261027b">
+<link rel="stylesheet" href="/static/cloud-speech.css?v=models-20261027">
+<link rel="stylesheet" href="/static/model-settings.css?v=models-20261027">
+<link rel="stylesheet" href="/static/remix-imitation.css?v=appearance-stages-20261028">
+<link rel="stylesheet" href="/static/remix-workflow.css?v=storyboard-repair-20261028">
+<link rel="stylesheet" href="/static/mobile.css?v=mobile-20261029">
+</head>
+<body>
+<svg class="defs" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1zM9 21v-8h6v8"/></symbol>
+  <symbol id="i-person" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2M8 21h8"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M8 22h8"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="3"/><path d="m16 10 5-3v10l-5-3"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V4h7l2 3h9v13H3z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+  <symbol id="i-document" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7zM14 2v5h5M8 12h8M8 16h8"/></symbol>
+  <symbol id="i-remix" viewBox="0 0 24 24"><rect x="3" y="4" width="13" height="16" rx="2"/><path d="M19 7h2v13a2 2 0 0 1-2 2H7M7 4v16M12 4v16M3 9h13M3 15h13"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2" fill="white"/><circle cx="16" cy="12" r="2" fill="white"/><circle cx="8" cy="18" r="2" fill="white"/></symbol></defs></svg>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-heading"><a href="#home" class="brand"><span class="brand-mark"><svg><use href="#i-play"/></svg></span><span>IP智能体<small>你的本地数字人空间</small></span></a><button type="button" class="icon-button sidebar-close" id="sidebar-close" aria-label="关闭导航"><svg><use href="#i-close"/></svg></button></div>
+  <button class="button dark new-video" id="new-video"><svg><use href="#i-plus"/></svg>创作新视频</button>
+  <div class="nav-caption">工作空间</div>
+  <nav class="main-nav" aria-label="主导航">
+    <a href="#home" data-route="home"><svg><use href="#i-home"/></svg>首页</a>
+    <a href="#avatars" data-route="avatars"><svg><use href="#i-person"/></svg>数字人克隆<span id="avatar-count" class="nav-count">0</span></a>
+    <a href="#voices" data-route="voices"><svg><use href="#i-mic"/></svg>语音克隆<span id="voice-count" class="nav-count">0</span></a>
+    <a href="#extract" data-route="extract"><svg><use href="#i-document"/></svg>视频文案提取</a>
+    <a href="#create" data-route="create"><svg><use href="#i-video"/></svg>数字人视频</a>
+    <a href="#remix" data-route="remix"><svg><use href="#i-remix"/></svg>爆款视频复刻</a>
+    <a href="#projects" data-route="projects"><svg><use href="#i-folder"/></svg>我的作品</a>
+    <a href="#models" data-route="models"><svg><use href="#i-settings"/></svg>模型配置</a>
+  </nav>
+  <div class="recent-heading"><span>最近创作</span><a href="#projects">查看全部</a></div>
+  <nav id="recent-nav" class="recent-nav" aria-label="最近创作"></nav>
+  <form id="remote-logout" method="post" action="/_auth/logout" hidden><button class="link-button" type="submit">退出网站登录</button></form>
+  <div class="local-card"><span class="status-dot"></span><div><span id="local-caption">本机运行 · 素材本地保存</span><small id="gpu-info">正在连接本地模型</small></div></div>
+</aside>
+<button class="scrim" id="scrim" aria-label="关闭侧边栏"></button>
+<main>
+  <header class="topbar"><div><button class="icon-button mobile-menu" id="menu-toggle" aria-label="打开导航" aria-controls="sidebar" aria-expanded="false"><svg><use href="#i-menu"/></svg></button><div class="topbar-location"><a class="mobile-brand" href="#home">IP智能体</a><span id="page-title">首页</span></div></div><div id="model-status" class="model-status" role="status"><span class="status-dot pending"></span>正在连接</div></header>
+  <div class="page-scroll" id="page-scroll">
+    <section class="page" id="page-home" aria-label="首页">
+      <div class="home-intro"><span class="eyebrow">让你的表达，继续发生</span><h1>下一条视频，<br class="mobile-break">从你开始。</h1><p>保存你的形象与声音，写下新的文案，让数字人替你开口。</p></div>
+      <div class="section-heading"><h2>开始你的创作</h2><span>准备一次，反复使用</span></div>
+      <div class="start-grid">
+        <article class="start-card"><div class="step-label"><span>1 · 你的形象</span><span id="home-avatar-status" class="tag">待创建</span></div><div class="start-art portrait-art" id="home-avatar-art"><svg><use href="#i-person"/></svg></div><h3>克隆数字人</h3><p>上传一段单人视频，保存为可重复使用的数字人形象。</p><a class="button" href="#avatars">管理我的数字人<svg><use href="#i-arrow"/></svg></a></article>
+        <article class="start-card"><div class="step-label"><span>2 · 你的声音</span><span id="home-voice-status" class="tag">待创建</span></div><div class="start-art voice-art"><div class="voice-orb"><svg><use href="#i-mic"/></svg></div><span id="home-voice-caption">一段录音，留下你的声音</span></div><h3>克隆专属声音</h3><p>用清晰人声创建声音资料，输入任意新文案试听。</p><a class="button" href="#voices">管理我的声音<svg><use href="#i-arrow"/></svg></a></article>
+        <article class="start-card compose-start"><div class="step-label"><span>3 · 你的内容</span><span class="tag">开始创作</span></div><div class="start-art script-art"><div><span>今天，想说点什么？</span><i></i><i></i><i></i><b><svg><use href="#i-arrow"/></svg></b></div></div><h3>让新文案开口说话</h3><p>自由搭配形象与声音，自动配音、同步口型并导出视频。</p><button class="button dark" id="home-create">创作新视频<svg><use href="#i-arrow"/></svg></button></article>
+      </div>
+      <div class="section-heading"><h2>最近的作品</h2><a href="#projects">查看全部<svg><use href="#i-arrow"/></svg></a></div>
+      <div class="projects-grid" id="home-projects"></div>
+    </section>
+    <section class="page" id="page-avatars" aria-label="数字人克隆" hidden>
+      <div class="page-heading"><div><span class="eyebrow">MY AVATARS</span><h1>数字人克隆</h1><p>保存不同的形象。每个数字人，都可以搭配任意已克隆声音。</p></div><button class="button dark" id="add-avatar"><svg><use href="#i-plus"/></svg>创建数字人</button></div>
+      <div class="library-toolbar"><span>我的数字人 <b id="avatar-total">0</b></span><label class="search"><svg><use href="#i-search"/></svg><input id="avatar-search" aria-label="搜索数字人" placeholder="搜索数字人"></label></div>
+      <div class="avatar-grid" id="avatar-library"></div>
+      <p class="quiet-note">形象来自你上传的视频，生成时会保留原有动作与背景，并根据新配音同步口型。</p>
+    </section>
+    <section class="page" id="page-voices" aria-label="语音克隆" hidden>
+      <div class="page-heading"><div><span class="eyebrow">MY VOICES</span><h1>语音克隆</h1><p>用一段录音留下你的声音。独立配音，或搭配任何数字人。</p></div><div class="voice-heading-actions"><button class="button" type="button" data-open-models>模型配置</button><button class="button dark" id="add-voice"><svg><use href="#i-plus"/></svg>克隆新声音</button></div></div>
+      <div class="voice-tip"><span class="tip-icon"><svg><use href="#i-mic"/></svg></span><div><strong>一小段清晰人声，就可以开始</strong><p>本地建议 3–10 秒；云端建议 30–60 秒清晰单人录音。保存后可输入新文案试听。</p></div></div>
+      <div class="library-toolbar"><span>我的声音 <b id="voice-total">0</b></span><label class="search"><svg><use href="#i-search"/></svg><input id="voice-search" aria-label="搜索声音" placeholder="搜索声音"></label></div>
+      <div class="voice-grid" id="voice-library"></div>
+    </section>
+    <section class="page" id="page-create" aria-label="数字人视频" hidden>
+      <div class="page-heading"><div><span class="eyebrow">CREATE</span><h1>让文案变成新视频</h1><p>选一个形象，配一种声音，再写下你想说的话。</p></div><button class="button" id="reset-editor"><svg><use href="#i-plus"/></svg>新建创作</button></div>
+      <div class="editor-grid">
+        <div class="editor-form panel">
+          <div class="field-heading"><label for="editor-avatar">数字人形象</label><button class="link-button" id="editor-add-avatar">＋ 创建数字人</button></div><select id="editor-avatar"><option value="">请选择数字人</option></select>
+          <div class="field-heading"><label for="editor-voice">克隆声音</label><button class="link-button" id="editor-add-voice">＋ 克隆声音</button></div><select id="editor-voice"><option value="">请选择声音</option></select>
+          <div class="selected-voice" id="selected-voice-preview" hidden><span>参考录音</span><audio id="editor-reference" controls preload="none"></audio></div>
+          <div class="field-heading script-heading"><label for="script">新的口播文案</label><span id="char-count">0 / 8000</span></div><textarea id="script" maxlength="8000" rows="7" placeholder="写下你想说的话……&#10;也可以先生成配音，听过之后再生成视频。"></textarea>
+          <div class="options-row"><label>语音模型<select id="tts-model"></select></label><label>配音语言<select id="language"><option value="zh">中文</option><option value="en">英文</option></select></label></div>
+          <p class="model-hint" id="tts-model-hint"></p><button class="cloud-settings-link" type="button" data-open-models>前往模型配置</button><div id="editor-emotion"></div>
+          <div class="options-row"><label>对口型模型<select id="lipsync-model"></select></label><label>视频质量<select id="quality"><option value="standard">标准</option><option value="fine">精细 · 更慢</option></select></label></div>
+          <p class="model-hint" id="lipsync-model-hint"></p>
+          <div class="video-speed"><div class="video-speed-heading"><label for="video-speed">视频速度</label><output id="video-speed-value" for="video-speed">1.0 倍</output><button type="button" class="link-button" id="reset-video-speed">恢复默认</button></div><input type="range" id="video-speed" min="0.5" max="2" step="0.05" value="1" aria-label="视频速度" aria-valuetext="1.0 倍"><div class="video-speed-labels"><span>0.5 倍 · 慢放</span><span>1.0 倍 · 正常</span><span>2.0 倍 · 快放</span></div><p class="model-hint" id="video-speed-hint">输出视频的画面和声音同步变速，配音试听保持原速。</p></div>
+          <div class="options-row"><label>人脸修复<select id="restoration-model"></select></label><label for="restoration-strength" id="restoration-strength-wrap">修复强度 <output id="restoration-strength-value">35%</output><input type="range" id="restoration-strength" aria-label="修复强度" min="0" max="1" step="0.05" value="0.35"></label></div>
+          <p class="model-hint">修复可补充面部细节，较高强度可能改变肤质或五官。开启后同时保留修复前的视频。</p>
+          <p class="snapshot-note" id="snapshot-note" hidden>已载入这次作品生成时的素材。重新选择形象或声音，可切换到最新资料。</p>
+          <div class="editor-actions"><button class="button" id="generate-audio"><svg><use href="#i-play"/></svg>先听配音</button><button class="button dark" id="generate-video">生成视频<svg><use href="#i-arrow"/></svg></button></div>
+          <p class="editor-footnote">Ctrl + Enter 生成视频 · 作品自动保存到本机</p>
+        </div>
+        <div class="editor-preview panel"><div class="preview-heading"><span id="preview-title">形象预览</span><span class="tag">本地生成</span></div><div id="result"><div class="preview-empty"><svg><use href="#i-person"/></svg><p>选择一个数字人形象</p><a href="#avatars">去创建我的数字人 →</a></div></div></div>
+      </div>
+    </section>
+    <section class="page" id="page-extract" aria-label="视频文案提取" hidden>
+      <div class="page-heading"><div><span class="eyebrow">VIDEO TO TEXT</span><h1>视频文案提取</h1><p>把视频里的话，变成可以编辑和复用的文案。</p></div><span class="tag">本地 Whisper large-v3-turbo</span></div>
+      <div class="extract-layout">
+        <div class="extract-source-column">
+          <form class="panel extract-source" id="extract-form">
+            <label for="extract-share">粘贴抖音链接</label>
+            <textarea id="extract-share" rows="5" maxlength="8000" placeholder="粘贴视频链接或完整分享文本…"></textarea>
+            <button type="submit" class="button dark" id="extract-start"><svg><use href="#i-document"/></svg>开始提取文案</button>
+            <div class="extract-divider"><span>也可以</span></div>
+            <button type="button" class="button" id="extract-upload"><svg><use href="#i-upload"/></svg>上传本地视频</button>
+            <input type="file" id="extract-file" accept="video/mp4,video/quicktime,video/webm,.mkv,.avi" hidden>
+            <p class="extract-hint">支持 30 分钟以内的视频。链接通过公开解析服务下载，文案在本机转写，无需填写密钥。</p>
+            <p class="error-text" id="extract-input-error" role="alert" hidden></p>
+          </form>
+          <div class="extract-history-heading"><h2>提取记录</h2><span id="extract-history-count">0</span></div>
+          <div class="extract-history" id="extract-history" aria-label="提取记录"></div>
+        </div>
+        <div class="panel extract-output">
+          <div class="extract-output-heading"><h2>提取的文案</h2><span id="extract-save-state" role="status">纯文字 · 不带时间戳</span></div>
+          <div id="extract-empty" class="extract-empty"><svg><use href="#i-document"/></svg><h3>从一条视频开始</h3><p>粘贴链接或上传视频，文案会自动保存在这里。<br>可以继续修改，也可以直接用于创作。</p></div>
+          <div id="extract-task" hidden>
+            <div id="extract-progress" class="extract-progress" hidden><div class="progress-top"><span id="extract-progress-label"></span><span id="extract-progress-percent"></span></div><div class="progress-track" role="progressbar" aria-label="文案提取进度" aria-valuemin="0" aria-valuemax="100" id="extract-progress-bar"><div class="progress-fill" id="extract-progress-fill"></div></div><button class="button" id="extract-cancel">停止提取</button></div>
+            <div id="extract-failure" class="error-panel" hidden><p id="extract-failure-message"></p><button class="button" id="extract-retry">重新提取</button></div>
+            <div id="extract-document" hidden>
+              <label class="sr-only" for="extract-title">文案标题</label><input id="extract-title" class="extract-title" maxlength="200" placeholder="文案标题">
+              <label class="sr-only" for="extract-text">提取的文案内容</label><textarea id="extract-text" maxlength="200000" placeholder="提取的文字会显示在这里…"></textarea>
+              <div class="extract-document-footer"><span id="extract-word-count">0 字</span><button class="link-button" id="extract-save">保存修改</button></div>
+              <div class="extract-actions"><button class="button" id="extract-copy">复制文案</button><button class="button" id="extract-download">下载 TXT</button><button class="button dark" id="extract-use">用于创作<svg><use href="#i-arrow"/></svg></button></div>
+            </div>
+            <details class="extract-preview" id="extract-preview" hidden><summary>查看原视频 / 截取片段</summary><video id="extract-video" controls preload="none"></video>
+              <section class="extract-trim" id="extract-trim" aria-label="截取视频片段">
+                <div class="extract-trim-heading"><h3>拖动两端，选择片段</h3><a id="extract-full-video" class="link-button" download>下载完整视频</a></div>
+                <div class="extract-timeline" id="extract-timeline"><img id="extract-trim-frames" alt="视频缩略图时间轴"><div class="extract-timeline-shade left" id="extract-trim-before"></div><div class="extract-timeline-shade right" id="extract-trim-after"></div><div class="extract-timeline-window" id="extract-trim-window" title="拖动可移动整个片段"></div><button type="button" role="slider" class="extract-timeline-handle" id="extract-trim-start-handle" aria-label="截取起点" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-orientation="horizontal" title="拖动起点；方向键微调"><i></i></button><button type="button" role="slider" class="extract-timeline-handle" id="extract-trim-end-handle" aria-label="截取终点" aria-valuemin="0" aria-valuemax="1" aria-valuenow="1" aria-orientation="horizontal" title="拖动终点；方向键微调"><i></i></button><div class="extract-timeline-playhead" id="extract-trim-playhead" aria-hidden="true"></div></div>
+                <div class="extract-timeline-times"><span id="extract-trim-start-time">00:00.00</span><strong id="extract-trim-duration"></strong><span id="extract-trim-end-time">00:00.00</span></div>
+                <div class="extract-trim-actions"><button class="button" id="extract-trim-play" type="button">预览片段</button><button class="button dark" id="extract-trim-export" type="button">导出片段</button></div>
+                <p id="extract-trim-error" class="error-text" role="alert" hidden></p><p id="extract-trim-status" class="extract-hint" role="status"></p>
+                <details class="extract-clip-history" id="extract-clip-history" hidden><summary>已导出片段 <span id="extract-clip-count"></span></summary><div class="extract-clips" id="extract-clips" aria-label="已截取片段"></div></details>
+              </section>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="page" id="page-remix" aria-label="爆款视频复刻" hidden>
+      <div class="page-heading"><div><span class="eyebrow">REMIX STUDIO</span><h1>换个角色，保留熟悉的故事。</h1><p>上传原片和人物照片，选择要替换的角色。对白和音乐可以直接沿用。</p></div><div class="remix-heading-actions"><button class="button" id="remix-duplicate" hidden>复用为新项目</button><button class="button" id="remix-new"><svg><use href="#i-plus"/></svg>新建项目</button></div></div>
+      <div class="remix-topline"><div class="remix-steps"><span>上传原片</span><i>→</i><span>选择新角色</span><i>→</i><span>查看费用并生成</span></div><button class="remix-connect" id="remix-connect"><span class="status-dot pending" id="remix-connection-dot"></span><span id="remix-connection-label">连接 HypiHub</span><svg><use href="#i-arrow"/></svg></button></div>
+      <section id="remix-workflow" class="workflow" aria-label="创作进度与分镜确认" hidden></section>
+      <button id="workflow-back" class="button workflow-back" type="button" hidden>返回分镜与进度 ↑</button>
+      <div class="remix-layout">
+        <div class="remix-editor">
+          <div class="remix-modes" role="group" aria-label="复刻方式"><label><input type="radio" name="remix-mode" value="character" checked><span><strong>只换角色</strong><small>原声音、原时长</small></span></label><label><input type="radio" name="remix-mode" value="remix"><span><strong>自由改编</strong><small>人物、产品、文案与声音</small></span></label><label><input type="radio" name="remix-mode" value="imitate"><span><strong>模仿创作</strong><small>按剧本拍新片</small></span></label></div>
+          <div class="panel remix-panel"><div class="remix-section-title"><h2>原视频</h2><span>最长 3 分钟</span></div>
+            <label class="sr-only" for="remix-title">复刻项目名称</label><input id="remix-title" maxlength="100" value="我的视频复刻" placeholder="给这个项目起个名字">
+            <button class="remix-drop" id="remix-reference-upload"><svg><use href="#i-upload"/></svg><strong id="remix-reference-name">上传对标视频</strong><small>点击或拖入 · MP4 / MOV / WebM · 最长 3 分钟</small></button><input type="file" id="remix-reference-file" accept="video/mp4,video/quicktime,video/webm,.mkv" hidden>
+            <div class="remix-analysis-row"><button class="link-button" id="remix-analyze">准备参考镜头</button><span class="remix-hint" id="remix-analysis-hint">继续时会自动准备，不消耗积分。</span></div>
+          </div>
+          <section id="imitation-setup" class="panel remix-panel" hidden>
+            <div class="remix-section-title"><h2>固定角色与门店</h2><span>整片共用</span></div>
+            <p class="imitation-intro">人物照片固定身份，门店设置整片共用。戴假发、换装等造型变化按各镜头的剧情发生。</p>
+            <div id="imitation-empty" class="imitation-empty">上传原视频，点击「反推视频剧本」开始。</div>
+            <div id="imitation-cast"></div><input type="file" id="imitation-character-file" accept="image/jpeg,image/png,image/webp" hidden>
+            <div class="imitation-location"><h3>门店 / 场景</h3><button type="button" class="remix-asset-upload" id="imitation-background-upload"><span id="imitation-background-thumb"></span><span><strong id="imitation-background-name">上传你的门店照片</strong><small>可选 · 全片使用同一个门店</small></span></button><input type="file" id="imitation-background-file" accept="image/jpeg,image/png,image/webp" hidden><button type="button" class="link-button" id="imitation-background-remove" hidden>移除门店照片</button><label for="imitation-scene">场景要求</label><textarea id="imitation-scene" rows="3" maxlength="1400" placeholder="例如：明亮的现代美发店，浅色墙面、木色镜台；全部镜头在同一家店。"></textarea><p class="remix-hint">上传照片后以照片为准；只写文字也可以。均留空时沿用剧本中的场景设定。</p></div>
+          </section>
+          <div class="panel remix-panel"><div class="remix-section-title"><h2 id="remix-assets-heading">换成谁</h2><span>人物参考</span></div>
+            <div id="remix-character-wrap"><label class="remix-field-label" for="remix-target-character">原视频中，要替换哪个角色？</label><input id="remix-target-character" maxlength="300" placeholder="例如：拿着桃子的猴子，其他人不变"></div>
+            <div class="remix-asset-label"><label>人物形象</label><button class="link-button" id="remix-person-remove" hidden>移除</button></div><button class="remix-asset-upload" id="remix-person-upload"><span id="remix-person-thumb"><svg><use href="#i-person"/></svg></span><span><strong id="remix-person-name">上传人物照片或视频</strong><small>用作新人物的外观参考</small></span><svg><use href="#i-plus"/></svg></button><input type="file" id="remix-person-file" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" hidden>
+            <details id="remix-products-wrap" class="remix-product-options"><summary>替换产品 <span>可选</span></summary><div class="remix-asset-label"><label>产品素材</label><span>最多 6 张</span></div><div id="remix-products" class="remix-products"></div><button class="button" id="remix-product-upload"><svg><use href="#i-plus"/></svg>上传要替换的产品</button><input type="file" id="remix-product-file" accept="image/jpeg,image/png,image/webp" multiple hidden></details>
+            <div id="remix-sound-options"><div class="remix-asset-label"><label for="remix-sound-plan">声音处理</label><button class="link-button" id="remix-clone">＋ 克隆新声音</button></div><select id="remix-sound-plan"><option value="original">保留原视频声音</option><option value="roles">按角色换音色 · 台词不变</option><option value="all">整段重新配音</option><option value="native">由视频模型生成声音</option></select><select id="remix-voice-mode" hidden aria-label="内部配音模式"><option value="original">保留原声</option><option value="native">模型配音</option><option value="clone">克隆音色</option></select></div>
+            <div class="remix-preserve" id="remix-preserve"><svg><use href="#i-mic"/></svg><div><strong>沿用原片对白与音乐</strong><p>保留原时长与画面比例。其他角色、背景和动作会要求模型尽量保持一致。</p></div></div>
+            <div id="remix-voice-wrap" hidden><select id="remix-voice-scope" hidden aria-label="内部配音范围"><option value="roles">按角色</option><option value="all">整段</option></select><div id="remix-global-voice"><label class="remix-field-label" for="remix-voice">选择已克隆声音</label><select id="remix-voice"><option value="">选择已克隆声音</option></select></div>
+              <section id="remix-roles-wrap" class="remix-cast" aria-label="角色声音"><div class="remix-cast-heading"><h3>角色声音</h3><span id="remix-role-count"></span></div><p class="remix-cast-intro">选一次声音，应用这个角色的全部台词。</p><div id="remix-roles-empty" class="remix-cast-empty"><p id="remix-roles-status" role="status">自动识别原片里的说话人，再为角色指定声音。</p><button type="button" class="button" id="remix-identify-roles">识别原片角色</button></div><div id="remix-roles" class="remix-cast-list"></div>
+                <details id="remix-role-corrections" class="remix-corrections" hidden><summary>角色识别有误？调整归属</summary><p class="remix-hint">声音变化较大时，同一个人可能被分成两组。可以合并，也可修改个别台词的归属。换音色按台词时间段处理，该片段的背景音也会替换，重叠说话需先分离人声。</p><div id="remix-role-names"></div><div class="remix-merge"><label>将角色<select id="remix-merge-from" aria-label="要合并的角色"></select></label><span>合并到</span><label class="sr-only" for="remix-merge-to">合并到角色</label><select id="remix-merge-to" aria-label="合并到角色"></select><button type="button" class="button" id="remix-merge-roles">合并</button></div><div id="remix-dialogue" class="remix-dialogue" tabindex="-1"></div><button type="button" class="link-button" id="remix-reset-roles">恢复自动识别的归属</button></details>
+              </section><p class="remix-hint">使用已保存的音色和情感设置。生成画面的口型仍可能有差异。</p></div>
+          </div>
+          <div class="panel remix-panel"><div id="remix-script-wrap"><div class="remix-section-title"><h2>台词</h2><button class="link-button" id="remix-use-transcript" disabled>填入参考原文</button></div><label class="sr-only" for="remix-script-source">台词来源</label><select id="remix-script-source"><option value="original">沿用原文 · 不改台词</option><option value="custom">填写新文案</option></select><p class="remix-hint" id="remix-original-script"></p><label class="sr-only" for="remix-script">复刻视频新文案</label><textarea id="remix-script" rows="5" maxlength="8000" placeholder="写下新的台词、产品卖点或旁白…"></textarea></div><div id="remix-role-script-note" class="remix-preserve" hidden><svg><use href="#i-document"/></svg><div><strong>沿用原台词与对话顺序</strong><p>仅更换已指定角色的音色，其他角色保留原声。</p></div></div>
+            <div id="remix-audition-wrap" hidden><button class="button" id="remix-audition"><svg><use href="#i-play"/></svg>生成配音试听</button><p class="remix-hint" id="remix-audio-status" role="status"></p><audio id="remix-audio" controls preload="metadata" hidden></audio></div>
+            <label for="remix-instructions" class="remix-field-label">补充要求 <small>选填</small></label><textarea id="remix-instructions" rows="2" maxlength="4000" placeholder="例如：保留原角色的动作和衣服，其他人物不变。"></textarea>
+            <details class="remix-settings"><summary>生成设置</summary><div class="options-row"><label>画面比例<select id="remix-aspect"><option value="9:16">9:16 · 竖屏</option><option value="16:9">16:9 · 横屏</option><option value="1:1">1:1 · 方形</option></select></label><label>分辨率<select id="remix-resolution"><option value="480p">480p</option><option value="720p" selected>720p</option><option value="1080p">1080p</option></select></label></div><label class="remix-field-label" for="remix-video-model">视频生成模型</label><select id="remix-video-model"><option value="">连接后选择模型</option></select><label class="remix-checkbox"><input type="checkbox" id="remix-make-images" checked>先生成替换人物 / 产品后的分镜图</label><label class="remix-field-label" for="remix-image-model">分镜图模型</label><select id="remix-image-model"><option value="">连接后选择模型</option></select></details>
+          </div>
+          <div class="remix-submit"><p id="remix-next-step" role="status"></p><div><button class="button" id="remix-save">保存项目</button><button class="button dark" id="remix-quote">继续<svg><use href="#i-arrow"/></svg></button></div><p class="remix-hint" id="remix-save-state" role="status">素材与项目保存在本机</p></div><p class="error-text" id="remix-error" role="alert" hidden></p>
+        </div>
+        <div class="remix-review">
+          <div class="panel remix-preview-panel"><div class="remix-section-title"><h2 id="remix-preview-heading">参考预览</h2><span id="remix-project-status">等待上传</span></div><div id="remix-preview-empty" class="remix-preview-empty"><svg><use href="#i-remix"/></svg><strong>你的下一个好创意</strong><p>上传参考视频后，在这里查看原片<br>和拆解出的镜头。</p><div class="remix-empty-film"><i></i><i></i><i></i></div></div><video id="remix-preview" controls preload="none" hidden></video>
+            <div id="remix-progress" hidden><div class="progress-top"><span id="remix-progress-label"></span><span id="remix-progress-percent"></span></div><div class="progress-track"><div class="progress-fill" id="remix-progress-fill"></div></div></div>
+            <div class="remix-output-actions"><button class="button" id="remix-pause" hidden>当前镜头后暂停</button><button class="button" id="remix-resume" hidden>继续已保存的任务</button><a class="button dark" id="remix-download" hidden>下载新视频</a><button class="link-button" id="remix-show-reference" hidden>查看参考原片</button></div>
+            <p class="remix-hint" id="remix-process-note">生成前会显示预计积分，确认后才会上传素材并调用云端模型。</p>
+          </div>
+          <section id="imitation-board-panel" class="panel" hidden><div class="remix-section-title"><h2>检查角色与分镜</h2><span id="imitation-board-status"></span></div><p class="imitation-intro">检查人物身份、门店和造型变化是否符合剧情。确认后才继续生成动态视频。</p><div id="imitation-board"></div><button type="button" id="imitation-continue" class="button dark">分镜没问题，继续生成视频</button></section>
+          <section id="imitation-script-panel" class="panel" hidden><div class="remix-section-title"><h2>剧本与分镜</h2><span id="imitation-script-count">等待反推</span></div><p class="imitation-intro">可以修改动作、台词和镜头时长，再用新角色演绎同一个故事。</p><div id="imitation-script"></div><label id="imitation-approval-wrap" class="imitation-approval" hidden><input type="checkbox" id="imitation-approved">我已确认剧本、角色与门店设置</label></section>
+          <details class="remix-shot-details" id="remix-shot-details"><summary><span>参考镜头 <b id="remix-shot-count">0</b></span><small id="remix-shot-method">准备后可查看与调整</small></summary><div id="remix-shots" class="remix-shots"><p class="remix-shots-empty">准备后在这里查看参考镜头。</p></div></details>
+          <details id="remix-transcript-wrap" class="panel remix-transcript" hidden><summary>查看参考文案</summary><p id="remix-transcript"></p></details>
+        </div>
+      </div>
+      <div class="section-heading remix-history-heading"><h2>我的复刻项目</h2><span id="remix-history-count">0 个项目</span></div><div id="remix-history" class="remix-history"></div>
+    </section>
+    <section class="page" id="page-models" aria-label="模型配置" hidden>
+      <div class="page-heading"><div><span class="eyebrow">MODEL SETTINGS</span><h1>模型配置</h1><p>每个类别启用一个模型，所有创作统一使用。选择后自动保存。</p></div><button class="button" id="models-reload">刷新模型</button></div>
+      <div class="models-layout"><nav id="models-categories" class="models-categories" aria-label="模型分类"></nav><div class="models-panel"><div id="models-options"></div><p id="models-message" role="status" aria-live="polite"></p></div></div>
+      <div class="models-services-heading"><div><h2>API 服务连接</h2><p>密钥加密保存在这台电脑。连接账号后，再在上方选择模型。</p></div><span>本地模型无需密钥</span></div>
+      <div class="models-hub"><div><strong>HypiHub</strong><p>视频生成 · 图片生成</p></div><span id="models-hub-status">读取连接状态…</span><button class="button" id="models-hub-connect">配置连接</button></div>
+      <details class="models-cloud-services" id="models-cloud-services"><summary>MiniMax / ElevenLabs · 语音克隆 API <span id="models-cloud-status"></span></summary><div id="models-services"></div></details>
+      <p class="models-footnote">切换模型用于新任务，已生成的作品保留。云端生成前仍会显示费用确认。</p>
+    </section>
+    <section class="page" id="page-projects" aria-label="我的作品" hidden>
+      <div class="page-heading"><div><span class="eyebrow">MY PROJECTS</span><h1>我的作品</h1><p>生成的视频、配音和任务进度，都在这里。</p></div><button class="button dark" id="projects-create"><svg><use href="#i-plus"/></svg>创作新视频</button></div>
+      <div class="library-toolbar project-toolbar"><div class="filters" id="project-filters" role="group" aria-label="作品筛选"><button data-filter="all" class="active" aria-pressed="true">全部</button><button data-filter="avatar-video" aria-pressed="false">数字人视频</button><button data-filter="remix-video" aria-pressed="false">爆款复刻</button><button data-filter="audio" aria-pressed="false">配音</button><button data-filter="active" aria-pressed="false">进行中</button><button data-filter="trash" aria-pressed="false">回收站 <span id="project-trash-count">0</span></button></div><div class="project-tools"><label class="search"><svg><use href="#i-search"/></svg><input id="project-search" aria-label="搜索作品" placeholder="搜索作品"></label><button class="button" id="project-bulk-toggle" aria-pressed="false">批量管理</button></div></div>
+      <p class="project-trash-note" id="project-trash-note" hidden>删除的作品暂存在这里，可以随时恢复。文件仍保留在本机，不会释放磁盘空间。</p>
+      <div class="project-bulk-bar" id="project-bulk-bar" hidden><label class="project-select-all"><input type="checkbox" id="project-select-all">全选当前结果</label><span id="project-selection-count" aria-live="polite">已选 0 项</span><button class="button danger" id="project-delete-selected" disabled>删除所选</button><button class="button dark" id="project-restore-selected" hidden disabled>恢复所选</button></div>
+      <div class="projects-grid" id="project-library"></div>
+    </section>
+  </div>
+</main>
+<dialog id="asset-dialog" aria-labelledby="asset-title">
+  <form id="asset-form">
+    <div class="dialog-heading"><div><span class="eyebrow" id="asset-eyebrow">你的数字人</span><h2 id="asset-title">创建数字人</h2></div><button type="button" class="icon-button" id="close-asset" aria-label="关闭素材窗口"><svg><use href="#i-close"/></svg></button></div>
+    <p class="dialog-description" id="asset-description"></p>
+    <label for="asset-name" id="asset-name-label">名称</label><input id="asset-name" maxlength="40" required autocomplete="off" placeholder="给它起个容易辨认的名字">
+    <div class="upload-area" id="upload-area"><button type="button" id="choose-file"><span class="upload-icon"><svg><use href="#i-upload"/></svg></span><strong id="upload-title">选择人物视频</strong><small id="upload-hint">也可以拖入文件</small></button><input id="asset-file" type="file" hidden><video id="asset-video" controls muted preload="none" hidden></video><audio id="asset-audio" controls preload="none" hidden></audio></div>
+    <div id="avatar-options"><label for="asset-default-voice">默认声音 <small>选填，创作时仍可更换</small></label><select id="asset-default-voice"><option value="">暂不设置</option></select><div class="options-row"><label>当前对口型模型<select id="asset-lipsync-model"></select></label><label>当前人脸修复<select id="asset-restoration-model"></select></label></div><label for="asset-restoration-strength" id="asset-strength-wrap">默认修复强度 <output id="asset-strength-value">35%</output><input type="range" id="asset-restoration-strength" aria-label="默认修复强度" min="0" max="1" step="0.05" value="0.35"></label></div>
+    <div id="voice-options" hidden><label>当前语音模型<select id="asset-tts-model"></select></label><p id="asset-model-hint" class="model-hint"></p><button class="cloud-settings-link" type="button" data-open-models>模型配置</button><div id="asset-emotion"></div><label for="asset-reference">参考录音原文 <small id="reference-help">留空自动识别</small></label><textarea id="asset-reference" rows="3" maxlength="2000" placeholder="录音里实际说的话，长录音只填写前 10 秒。"></textarea><div class="options-row"><label>录音语言<select id="asset-reference-language"><option value="auto">自动识别</option><option value="zh">中文</option><option value="en">英文</option></select></label><label>默认配音语言<select id="asset-language"><option value="zh">中文</option><option value="en">英文</option></select></label></div></div>
+    <p id="asset-error" class="error-text" role="alert" hidden></p>
+    <div class="dialog-actions"><button type="button" class="button" id="cancel-asset">取消</button><button type="button" class="button" id="copy-asset" hidden>另存为</button><button type="submit" class="button" id="save-asset">保存</button><button type="button" class="button dark" id="save-test-voice" hidden>保存并试听</button></div>
+  </form>
+</dialog>
+<dialog id="voice-dialog" aria-labelledby="voice-test-title">
+  <div class="dialog-heading"><div><span class="eyebrow">VOICE PREVIEW</span><h2 id="voice-test-title">试听克隆声音</h2></div><button class="icon-button" id="close-voice-test" aria-label="关闭声音试听"><svg><use href="#i-close"/></svg></button></div>
+  <p class="dialog-description" id="voice-test-name"></p>
+  <label for="voice-test-text">试听文案</label><textarea id="voice-test-text" maxlength="8000" rows="3"></textarea>
+  <div class="options-row"><label>当前语音模型<select id="voice-test-model"></select></label><label for="voice-test-language">配音语言<select id="voice-test-language"><option value="zh">中文</option><option value="en">英文</option></select></label></div><p class="model-hint">试听使用「模型配置」中启用的语音模型。音色与情感设置可继续复用。</p><button class="cloud-settings-link" type="button" data-open-models>模型配置</button>
+  <div id="test-emotion"></div><div id="voice-test-result" class="voice-test-result" aria-live="polite"></div>
+  <div class="dialog-actions"><button class="button" id="voice-use">用于创作</button><button class="button dark" id="voice-test-generate"><svg><use href="#i-play"/></svg>生成试听</button></div>
+</dialog>
+<dialog id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-description">
+  <div class="dialog-heading"><h2 id="delete-title">确认删除</h2><button type="button" class="icon-button" id="close-delete" aria-label="关闭删除确认"><svg><use href="#i-close"/></svg></button></div>
+  <p id="delete-name" class="delete-name"></p>
+  <p class="dialog-description" id="delete-description"></p>
+  <p id="delete-error" class="error-text" role="alert" hidden></p>
+  <div class="dialog-actions"><button type="button" class="button" id="cancel-delete" autofocus>取消</button><button type="button" class="button danger-solid" id="confirm-delete">确认删除</button></div>
+</dialog>
+<div id="toast" class="toast" role="alert" hidden></div>
+<script src="/static/speech-controls.js?v=models-20261027" defer></script>
+<dialog id="remix-connect-dialog" aria-labelledby="remix-connect-title"><div class="dialog-heading"><h2 id="remix-connect-title">连接 HypiHub</h2><button class="icon-button" id="remix-connect-close" aria-label="关闭连接窗口"><svg><use href="#i-close"/></svg></button></div><p class="dialog-description">用你的 HypiHub 账号生成图片和视频。密钥加密保存在本机，页面不会回显。</p><a class="link-button" href="https://hypit.ai/account?pane=api" target="_blank" rel="noopener noreferrer">打开 HypiHub，获取 API Key ↗</a><form id="remix-connect-form"><label for="remix-key">API Key</label><input type="password" id="remix-key" autocomplete="off" placeholder="sk-hh-…" required><p class="error-text" id="remix-connect-error" hidden></p><div class="dialog-actions"><button class="button dark" id="remix-connect-save" type="submit">保存并验证连接</button></div></form><p class="remix-hint">验证连接只读取可用模型，不会提交生成任务。</p></dialog>
+<dialog id="remix-quote-dialog" aria-labelledby="remix-quote-title"><div class="dialog-heading"><h2 id="remix-quote-title">确认这次生成</h2><button class="icon-button" id="remix-quote-close" aria-label="关闭报价窗口"><svg><use href="#i-close"/></svg></button></div><p class="remix-cost"><strong id="remix-cost">—</strong><span>预计 HypiHub 积分</span></p><div id="remix-cost-details"></div><p class="dialog-description" id="remix-quote-note"></p><p class="error-text" id="remix-generate-error" hidden></p><div class="dialog-actions"><button class="button" id="remix-quote-cancel">继续编辑</button><button class="button dark" id="remix-generate">确认积分并生成</button></div></dialog>
+<script src="/static/studio.js?v=mobile-20261029" defer></script>
+<script src="/static/cloud-speech.js?v=models-20261027" defer></script>
+<script src="/static/model-settings.js?v=upload-fix-20261028" defer></script>
+<script src="/static/extraction.js?v=clip-20261027" defer></script>
+<script src="/static/extraction-trim.js?v=clip-20261027" defer></script>
+<script src="/static/remix-imitation.js?v=appearance-stages-20261028" defer></script>
+<script src="/static/remix-workflow.js?v=storyboard-repair-20261028b" defer></script>
+<script src="/static/remix.js?v=unified-projects-20261029" defer></script>
+<script src="/static/mobile.js?v=mobile-20261029" defer></script>
+</body>
+</html>
