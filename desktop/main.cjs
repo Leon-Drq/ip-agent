@@ -101,7 +101,7 @@ async function launch(mode,url){
     if(!await mediaReady())throw new Error('请先安装媒体工具，或选择已有的 FFmpeg 目录。');
     shuttingDown=false;origin=await startBackend();
   }else{origin=serviceURL(url);await health(origin);}
-  configuration={...configuration,mode,url:mode==='connect'?origin:configuration.url};save();
+  configuration={...configuration,mode,url:mode==='connect'?origin:configuration.url,autoOpen:true};save();
   const oldWindow=window;
   for(const preview of previews.values())if(!preview.isDestroyed())preview.destroy();
   previews.clear();
@@ -140,16 +140,22 @@ if(!app.requestSingleInstanceLock()){app.quit();}else{
     ipcMain.handle('setup:open-data',event=>{fromSetup(event);return shell.openPath(home());});
     if(smoke){
       configuration.mediaDir=process.env.IP_AGENT_SMOKE_MEDIA_BIN;
-      return launch('builtin').then(async()=>{
-        await health(backendOrigin,token);
+      const remote=process.env.IP_AGENT_SMOKE_CONNECT;
+      return launch(remote?'connect':'builtin',remote).then(async()=>{
+        await health(remote||backendOrigin,remote?'':token);
         // Exercise native OS encryption without using a real credential.
         if(await masterKey()!==await masterKey())throw new Error('System key storage did not round-trip');
         if(!window.getTitle().includes('IP智能体'))throw new Error('Studio window failed to load');
         console.log('IP_AGENT_DESKTOP_SMOKE_OK');app.quit();
       });
     }
+    if(configuration.autoOpen){
+      return launch(configuration.mode,configuration.url).catch(error=>{
+        showSetup();setupWindow.webContents.once('did-finish-load',()=>progress(error.message));
+      });
+    }
     showSetup();
-  }).catch(error=>{if(smoke){console.error(error.message);app.exit(1);}else{dialog.showErrorBox('IP智能体启动失败',error.message);app.quit();}});
+  }).catch(error=>{if(smoke){console.error(error.message);stopBackend();app.exit(1);}else{dialog.showErrorBox('IP智能体启动失败',error.message);app.quit();}});
   app.on('window-all-closed',()=>{app.quit();});
   app.on('before-quit',()=>{quitting=true;stopBackend();});
   app.on('activate',()=>{if(!window&&!setupWindow)showSetup();});
