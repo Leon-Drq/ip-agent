@@ -38,13 +38,19 @@ jobs:
       - run: npm test
       - run: python scripts/audit_source.py
       - run: python -m unittest discover -s tests -p "test_*.py"
+      - run: node scripts/test_media.cjs
       - run: python scripts/smoke_backend.py
+        env:
+          IP_AGENT_MEDIA_BIN: ${{ github.workspace }}/.desktop-test/bin
       - run: python scripts/icon.py
       - run: python scripts/build_backend.py
       - run: python scripts/smoke_backend.py --frozen
+        env:
+          IP_AGENT_MEDIA_BIN: ${{ github.workspace }}/.desktop-test/bin
       - run: npm run dist -- --${{ matrix.target }} --${{ matrix.arch }}
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - run: node scripts/smoke_desktop.cjs --packaged
       - uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.target }}-${{ matrix.arch }}

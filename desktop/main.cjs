@@ -10,7 +10,10 @@ const {pathToFileURL} = require('node:url');
 const {serviceURL, sameOrigin} = require('./security.cjs');
 const {installMedia} = require('./media.cjs');
 const execute = promisify(execFile);
+const smoke = process.argv.includes('--smoke-test');
+if(smoke)app.setPath('userData',fs.mkdtempSync(path.join(require('node:os').tmpdir(),'ip-agent-desktop-')));
 let window, setupWindow, backend, backendOrigin='', token='', quitting=false, shuttingDown=false;
+const previews=new Map();
 let configuration={mode:'builtin',url:'http://127.0.0.1:7865'};
 const setupFile=path.join(__dirname,'setup.html');
 const home=()=>app.getPath('userData');
@@ -21,7 +24,14 @@ function save(){fs.writeFileSync(path.join(home(),'desktop.json'),JSON.stringify
 function securePreferences(preload){return {nodeIntegration:false,contextIsolation:true,sandbox:true,webSecurity:true,...(preload?{preload}:{} )};}
 function openExternal(url){try{const u=new URL(url);if(u.protocol==='https:'&&!u.username&&!u.password)shell.openExternal(u.href);}catch{}}
 function protectWindow(win,origin){
-  win.webContents.setWindowOpenHandler(({url})=>{if(!origin||!sameOrigin(url,origin))openExternal(url);return {action:'deny'};});
+  win.webContents.setWindowOpenHandler(({url})=>{
+    if(origin&&sameOrigin(url,origin)){
+      const preview=new BrowserWindow({title:'查看素材',width:820,height:800,parent:win,webPreferences:securePreferences()});
+      const id=preview.webContents.id;previews.set(id,preview);protectWindow(preview,origin);
+      preview.on('closed',()=>previews.delete(id));preview.loadURL(url).catch(()=>preview.close());
+    }else openExternal(url);
+    return {action:'deny'};
+  });
   win.webContents.on('will-navigate',(event,url)=>{if(origin?!sameOrigin(url,origin):url!==pathToFileURL(setupFile).href){event.preventDefault();openExternal(url);}});
   win.webContents.on('will-attach-webview',event=>event.preventDefault());
 }
@@ -35,12 +45,16 @@ function fromSetup(event){
   if(!setupWindow||event.sender!==setupWindow.webContents||event.senderFrame!==setupWindow.webContents.mainFrame)
     throw new Error('此操作仅限工作环境设置窗口。');
 }
-function masterKey(){
-  if(!safeStorage.isEncryptionAvailable())throw new Error('系统安全存储暂不可用，请解锁钥匙串后重试。');
+async function masterKey(){
+  if(!await safeStorage.isAsyncEncryptionAvailable())throw new Error('系统安全存储暂不可用，请解锁钥匙串后重试。');
   const file=path.join(home(),'vault.secret');
-  if(fs.existsSync(file))return safeStorage.decryptString(fs.readFileSync(file));
+  if(fs.existsSync(file)){
+    const decoded=await safeStorage.decryptStringAsync(fs.readFileSync(file));
+    if(decoded.shouldReEncrypt)fs.writeFileSync(file,await safeStorage.encryptStringAsync(decoded.result),{mode:0o600});
+    return decoded.result;
+  }
   const key=crypto.randomBytes(32).toString('hex');
-  fs.writeFileSync(file,safeStorage.encryptString(key),{mode:0o600});return key;
+  fs.writeFileSync(file,await safeStorage.encryptStringAsync(key),{mode:0o600});return key;
 }
 async function mediaReady(){
   try{for(const name of ['ffmpeg','ffprobe'])await execute(path.join(mediaDir(),name+(process.platform==='win32'?'.exe':'')),['-version'],{windowsHide:true,timeout:8000});return true;}catch{return false;}
@@ -55,7 +69,7 @@ async function startBackend(){
   if(backend&&backend.exitCode===null){await health(backendOrigin,token);return backendOrigin;}
   await fsp.mkdir(workspace(),{recursive:true});
   const port=await freePort();token=crypto.randomBytes(32).toString('hex');backendOrigin=`http://127.0.0.1:${port}`;
-  const env={...process.env,IP_AGENT_WORKSPACE:workspace(),IP_AGENT_MEDIA_BIN:mediaDir(),IP_AGENT_SESSION_TOKEN:token,IP_AGENT_MASTER_KEY:masterKey(),PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8'};
+  const env={...process.env,IP_AGENT_WORKSPACE:workspace(),IP_AGENT_MEDIA_BIN:mediaDir(),IP_AGENT_SESSION_TOKEN:token,IP_AGENT_MASTER_KEY:await masterKey(),PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8'};
   // Never let development loader settings leak into the bundled Python runtime.
   delete env.PYTHONHOME;delete env.PYTHONPATH;
   let command,args;
@@ -89,11 +103,13 @@ async function launch(mode,url){
   }else{origin=serviceURL(url);await health(origin);}
   configuration={...configuration,mode,url:mode==='connect'?origin:configuration.url};save();
   const oldWindow=window;
-  window=new BrowserWindow({title:'IP智能体',width:1440,height:960,minWidth:560,minHeight:500,backgroundColor:'#f9fbfd',webPreferences:securePreferences()});
+  for(const preview of previews.values())if(!preview.isDestroyed())preview.destroy();
+  previews.clear();
+  window=new BrowserWindow({title:'IP智能体',show:!smoke,width:1440,height:960,minWidth:560,minHeight:500,backgroundColor:'#f9fbfd',webPreferences:securePreferences()});
   const current=window;protectWindow(current,origin);
   // Token never enters renderer JavaScript or a URL; attach only to this exact origin.
   session.defaultSession.webRequest.onBeforeSendHeaders((details,callback)=>{
-    if(!current.isDestroyed()&&mode==='builtin'&&details.webContentsId===current.webContents.id&&sameOrigin(details.url,backendOrigin))
+    if(!current.isDestroyed()&&mode==='builtin'&&(details.webContentsId===current.webContents.id||previews.has(details.webContentsId))&&sameOrigin(details.url,backendOrigin))
       details.requestHeaders['x-ip-agent-token']=token;
     callback({requestHeaders:details.requestHeaders});
   });
@@ -107,8 +123,9 @@ if(!app.requestSingleInstanceLock()){app.quit();}else{
   app.whenReady().then(()=>{
     fs.mkdirSync(home(),{recursive:true});
     try{configuration={...configuration,...JSON.parse(fs.readFileSync(path.join(home(),'desktop.json'),'utf8'))};}catch{}
-    session.defaultSession.setPermissionRequestHandler((_wc,_p,callback)=>callback(false));
-    session.defaultSession.setPermissionCheckHandler(()=>false);
+    const clipboardAllowed=(wc,p)=>p==='clipboard-sanitized-write'&&!!window&&wc===window.webContents;
+    session.defaultSession.setPermissionRequestHandler((wc,p,callback)=>callback(clipboardAllowed(wc,p)));
+    session.defaultSession.setPermissionCheckHandler((wc,p)=>clipboardAllowed(wc,p));
     Menu.setApplicationMenu(Menu.buildFromTemplate([
       ...(process.platform==='darwin'?[{role:'appMenu'}]:[]),
       {label:'工作室',submenu:[{label:'工作环境…',accelerator:'CmdOrCtrl+,',click:showSetup},{label:'打开数据文件夹',click:()=>shell.openPath(home())},{type:'separator'},{role:'quit',label:'退出'}]},
@@ -121,8 +138,18 @@ if(!app.requestSingleInstanceLock()){app.quit();}else{
     ipcMain.handle('setup:install-media',async event=>{fromSetup(event);await installMedia(path.join(workspace(),'bin'),net.fetch,progress);configuration.mediaDir=path.join(workspace(),'bin');save();return true;});
     ipcMain.handle('setup:choose-media',async event=>{fromSetup(event);const selected=await dialog.showOpenDialog(setupWindow,{title:'选择包含 FFmpeg 和 FFprobe 的文件夹',properties:['openDirectory']});if(selected.canceled)return false;const previous=configuration.mediaDir;configuration.mediaDir=selected.filePaths[0];if(!await mediaReady()){configuration.mediaDir=previous;throw new Error('这个目录中没有可运行的 FFmpeg 和 FFprobe。');}save();return true;});
     ipcMain.handle('setup:open-data',event=>{fromSetup(event);return shell.openPath(home());});
+    if(smoke){
+      configuration.mediaDir=process.env.IP_AGENT_SMOKE_MEDIA_BIN;
+      return launch('builtin').then(async()=>{
+        await health(backendOrigin,token);
+        // Exercise native OS encryption without using a real credential.
+        if(await masterKey()!==await masterKey())throw new Error('System key storage did not round-trip');
+        if(!window.getTitle().includes('IP智能体'))throw new Error('Studio window failed to load');
+        console.log('IP_AGENT_DESKTOP_SMOKE_OK');app.quit();
+      });
+    }
     showSetup();
-  }).catch(error=>{dialog.showErrorBox('IP智能体启动失败',error.message);app.quit();});
+  }).catch(error=>{if(smoke){console.error(error.message);app.exit(1);}else{dialog.showErrorBox('IP智能体启动失败',error.message);app.quit();}});
   app.on('window-all-closed',()=>{app.quit();});
   app.on('before-quit',()=>{quitting=true;stopBackend();});
   app.on('activate',()=>{if(!window&&!setupWindow)showSetup();});
