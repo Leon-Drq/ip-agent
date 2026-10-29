@@ -6,6 +6,12 @@ import os
 import sys
 from pathlib import Path
 
+# Frozen Python does not reliably honor PYTHONUTF8 on all Windows locales.
+# Workers stream Chinese progress messages through pipes, not a console code page.
+for stream in (sys.stdout, sys.stderr):
+    if stream is not None and hasattr(stream, 'reconfigure'):
+        stream.reconfigure(encoding='utf-8', errors='replace')
+
 def run_worker(module, stage, job_path):
     from settings import environment
     os.environ.update(environment())
@@ -22,7 +28,7 @@ def run_worker(module, stage, job_path):
         else:
             raise RuntimeError('此功能需要单独安装本地模型引擎，或连接已有工作室。')
     except Exception as error:
-        print('@@ERROR ' + (str(error)[:400] if isinstance(error, (ValueError, RuntimeError)) else '处理未完成，请检查运行环境。'), flush=True)
+        print('@@ERROR ' + (str(error)[:400] if isinstance(error, (ValueError, RuntimeError)) else '处理未完成，请检查运行环境。') + ' [' + type(error).__name__ + ']', flush=True)
         sys.exit(1)
 
 def main():

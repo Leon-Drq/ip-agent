@@ -66,7 +66,7 @@ with tempfile.TemporaryDirectory(prefix='ip-agent-test-') as tmp:
                     (work/'job.json').write_text('{}')
                     (work/'inputs.json').write_text(json.dumps({'reference':str(audio)}))
                     completed=subprocess.run([*cmd,'--worker','worker','prepare',str(work/'job.json')],env=env,capture_output=True,timeout=30)
-                    assert completed.returncode==0,completed.stderr.decode(errors='replace')
+                    assert completed.returncode==0,(completed.stdout+completed.stderr).decode(errors='replace')
                     assert (work/'reference.wav').stat().st_size>1000
                 print(('Frozen' if frozen else 'Source')+' backend: clean workspace, auth, UI, library, settings and media passed')
         finally:
